@@ -1,174 +1,171 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Eve Coisas</title>
   <style>
     body {
-      font-family: 'Courier New', monospace;
-      background: #1a1a1a;
-      color: #ffc0cb;
+      background-image: url('822536e0e474723b03c737d7c9479d5b.jpg');
+      background-size: cover;
+      background-position: center;
+      font-family: 'Special Elite', monospace;
+      color: #f1f1f1;
+      margin: 0;
       padding: 2rem;
-      max-width: 800px;
-      margin: auto;
+      backdrop-filter: brightness(0.4);
     }
+
     h1 {
-      color: #ff69b4;
-      text-align: center;
-      font-size: 2.5rem;
-      border-bottom: 2px solid #ff69b4;
-      padding-bottom: 0.5rem;
-    }
-    section {
+      font-size: 3rem;
+      color: #ff0055;
       margin-bottom: 2rem;
-      padding: 1rem;
-      background: #2b2b2b;
-      border-radius: 10px;
-      border: 1px dashed #ff69b4;
     }
-    label, input, textarea, select {
+
+    nav {
+      margin-bottom: 2rem;
+    }
+
+    nav a {
+      margin-right: 1.5rem;
+      color: #ffb3d1;
+      text-decoration: none;
+      font-size: 1.2rem;
+      text-transform: uppercase;
+    }
+
+    section {
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid #ff0055;
+      padding: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    label, select, input, textarea {
       display: block;
       width: 100%;
       margin-top: 0.5rem;
-      background: #1a1a1a;
-      color: #ffc0cb;
-      border: 1px solid #ff69b4;
-      border-radius: 5px;
+      margin-bottom: 1rem;
+      background-color: #1a1a1a;
+      color: #fff;
+      border: 1px solid #ff0055;
       padding: 0.5rem;
+      font-family: 'Special Elite', monospace;
     }
+
     button {
-      margin-top: 1rem;
-      background: #ff69b4;
-      color: #1a1a1a;
+      background-color: #ff0055;
       border: none;
       padding: 0.5rem 1rem;
-      border-radius: 5px;
+      color: white;
       cursor: pointer;
-      font-weight: bold;
+      font-family: 'Special Elite', monospace;
     }
-    ul {
-      padding-left: 1.2rem;
-    }
-    .reclamacao-item {
-      background: #3a3a3a;
-      margin-top: 0.5rem;
-      padding: 0.5rem;
-      border-radius: 5px;
+
+    .entry {
+      border-top: 1px dashed #ffb3d1;
+      margin-top: 1rem;
+      padding-top: 1rem;
     }
   </style>
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
 </head>
 <body>
   <h1>Eve Coisas</h1>
 
-  <section>
-    <h2>🌸 Menstruação</h2>
-    <label for="menstruacao">Data de início:</label>
-    <input type="date" id="menstruacao">
-    <button onclick="salvarMenstruacao()">Salvar</button>
-    <p id="info-menstruacao"></p>
-  </section>
+  <nav>
+    <a href="#sangue">🩸 Sangue</a>
+    <a href="#tarefas">Tarefas</a>
+    <a href="#notas">Notas</a>
+    <a href="#plantas">Plantas</a>
+    <a href="#reclamar">Reclamar</a>
+  </nav>
 
-  <section>
-    <h2>✅ Tarefas do Dia</h2>
-    <input type="text" id="nova-task" placeholder="Escreve aqui a tarefa">
-    <button onclick="adicionarTask()">Adicionar</button>
-    <ul id="lista-tasks"></ul>
-  </section>
+  <section id="sangue">
+    <h2>🩸 Sangue</h2>
+    <label for="data">Data:</label>
+    <input type="date" id="data" />
 
-  <section>
-    <h2>📝 Notas Importantes</h2>
-    <textarea id="bloco-notas" rows="5" placeholder="Anotações..." onchange="salvarNotas()"></textarea>
-  </section>
-
-  <section>
-    <h2>🌿 Regar as Plantas</h2>
-    <button onclick="marcarRegado()">Já reguei hoje</button>
-    <p id="status-plantas"></p>
-  </section>
-
-  <section>
-    <h2>😤 Reclamações</h2>
-    <label for="tipo">Tipo de Reclamação:</label>
+    <label for="tipo">Como foi?</label>
     <select id="tipo">
-      <option value="trabalho lixo">trabalho lixo</option>
-      <option value="amigos malucos">amigos malucos</option>
-      <option value="amor amor amor">amor amor amor</option>
-      <option value="loucura mental">loucura mental</option>
+      <option value="punkzao">Punkzão</option>
+      <option value="sanguinolento">Sanguinolento</option>
+      <option value="suave">Suave</option>
     </select>
-    <label for="texto-reclamacao">Escreve aí:</label>
-    <textarea id="texto-reclamacao" rows="4" placeholder="Reclama aqui mesmo..."></textarea>
-    <button onclick="salvarReclamacao()">Reclamar</button>
+
+    <label for="nota">Nota:</label>
+    <textarea id="nota"></textarea>
+
+    <button onclick="adicionarSangue()">Salvar</button>
+
+    <div id="lista-sangue"></div>
+  </section>
+
+  <section id="tarefas">
+    <h2>Tarefas</h2>
+    <ul>
+      <li>☑ Acordar e tomar água</li>
+      <li>☑ Respirar fundo</li>
+      <li>☐ Fazer algo punk hoje</li>
+    </ul>
+  </section>
+
+  <section id="notas">
+    <h2>Notas</h2>
+    <textarea rows="5" placeholder="Coisas importantes, ideias, letras de música..."></textarea>
+  </section>
+
+  <section id="plantas">
+    <h2>Plantas</h2>
+    <button onclick="regarPlantas()">Reguei hoje</button>
+    <p id="statusPlantas"></p>
+  </section>
+
+  <section id="reclamar">
+    <h2>Reclamar</h2>
+    <label for="categoria">Categoria:</label>
+    <select id="categoria">
+      <option>trabalho lixo</option>
+      <option>amigos malucos</option>
+      <option>amor amor amor</option>
+      <option>loucura mental</option>
+    </select>
+    <textarea id="textoReclamacao" placeholder="Manda ver..."></textarea>
+    <button onclick="salvarReclamacao()">Enviar</button>
     <div id="lista-reclamacoes"></div>
   </section>
 
   <script>
-    function salvarMenstruacao() {
-      const data = document.getElementById('menstruacao').value;
-      localStorage.setItem('menstruacao', data);
-      document.getElementById('info-menstruacao').textContent = `Último registro: ${data}`;
+    function adicionarSangue() {
+      const data = document.getElementById('data').value;
+      const tipo = document.getElementById('tipo').value;
+      const nota = document.getElementById('nota').value;
+      if (data && tipo) {
+        const entrada = document.createElement('div');
+        entrada.className = 'entry';
+        entrada.innerHTML = `<strong>${data}</strong> - ${tipo}<br><em>${nota}</em>`;
+        document.getElementById('lista-sangue').appendChild(entrada);
+        document.getElementById('data').value = '';
+        document.getElementById('tipo').value = 'punkzao';
+        document.getElementById('nota').value = '';
+      }
     }
 
-    function adicionarTask() {
-      const task = document.getElementById('nova-task').value;
-      if (!task) return;
-      const ul = document.getElementById('lista-tasks');
-      const li = document.createElement('li');
-      li.textContent = task;
-      ul.appendChild(li);
-      document.getElementById('nova-task').value = '';
-    }
-
-    function salvarNotas() {
-      const notas = document.getElementById('bloco-notas').value;
-      localStorage.setItem('notas', notas);
-    }
-
-    function marcarRegado() {
-      const hoje = new Date().toLocaleDateString();
-      localStorage.setItem('plantas', hoje);
-      document.getElementById('status-plantas').textContent = `Regado em: ${hoje}`;
+    function regarPlantas() {
+      const agora = new Date().toLocaleString();
+      document.getElementById('statusPlantas').innerText = `Regadas em ${agora}`;
     }
 
     function salvarReclamacao() {
-      const tipo = document.getElementById('tipo').value;
-      const texto = document.getElementById('texto-reclamacao').value;
-      if (!texto) return;
-
-      const reclamacoes = JSON.parse(localStorage.getItem('reclamacoes') || '[]');
-      reclamacoes.push({ tipo, texto });
-      localStorage.setItem('reclamacoes', JSON.stringify(reclamacoes));
-
-      document.getElementById('texto-reclamacao').value = '';
-      mostrarReclamacoes();
-    }
-
-    function mostrarReclamacoes() {
-      const lista = document.getElementById('lista-reclamacoes');
-      lista.innerHTML = '';
-      const reclamacoes = JSON.parse(localStorage.getItem('reclamacoes') || '[]');
-      reclamacoes.forEach(rec => {
-        const div = document.createElement('div');
-        div.className = 'reclamacao-item';
-        div.innerHTML = `<strong>${rec.tipo}</strong><br>${rec.texto}`;
-        lista.appendChild(div);
-      });
-    }
-
-    window.onload = () => {
-      const dataMenstruacao = localStorage.getItem('menstruacao');
-      if (dataMenstruacao) {
-        document.getElementById('info-menstruacao').textContent = `Último registro: ${dataMenstruacao}`;
+      const categoria = document.getElementById('categoria').value;
+      const texto = document.getElementById('textoReclamacao').value;
+      if (texto) {
+        const entrada = document.createElement('div');
+        entrada.className = 'entry';
+        entrada.innerHTML = `<strong>${categoria}</strong><br>${texto}`;
+        document.getElementById('lista-reclamacoes').appendChild(entrada);
+        document.getElementById('textoReclamacao').value = '';
       }
-      const notas = localStorage.getItem('notas');
-      if (notas) {
-        document.getElementById('bloco-notas').value = notas;
-      }
-      const plantas = localStorage.getItem('plantas');
-      if (plantas) {
-        document.getElementById('status-plantas').textContent = `Regado em: ${plantas}`;
-      }
-      mostrarReclamacoes();
     }
   </script>
 </body>
