@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eve Coisas</title>
+  <style>
+    body {
+      font-family: 'Courier New', monospace;
+      background: #1a1a1a;
+      color: #ffc0cb;
+      padding: 2rem;
+      max-width: 800px;
+      margin: auto;
+    }
+    h1 {
+      color: #ff69b4;
+      text-align: center;
+      font-size: 2.5rem;
+      border-bottom: 2px solid #ff69b4;
+      padding-bottom: 0.5rem;
+    }
+    section {
+      margin-bottom: 2rem;
+      padding: 1rem;
+      background: #2b2b2b;
+      border-radius: 10px;
+      border: 1px dashed #ff69b4;
+    }
+    label, input, textarea, select {
+      display: block;
+      width: 100%;
+      margin-top: 0.5rem;
+      background: #1a1a1a;
+      color: #ffc0cb;
+      border: 1px solid #ff69b4;
+      border-radius: 5px;
+      padding: 0.5rem;
+    }
+    button {
+      margin-top: 1rem;
+      background: #ff69b4;
+      color: #1a1a1a;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    ul {
+      padding-left: 1.2rem;
+    }
+    .reclamacao-item {
+      background: #3a3a3a;
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Eve Coisas</h1>
+
+  <section>
+    <h2>🌸 Menstruação</h2>
+    <label for="menstruacao">Data de início:</label>
+    <input type="date" id="menstruacao">
+    <button onclick="salvarMenstruacao()">Salvar</button>
+    <p id="info-menstruacao"></p>
+  </section>
+
+  <section>
+    <h2>✅ Tarefas do Dia</h2>
+    <input type="text" id="nova-task" placeholder="Escreve aqui a tarefa">
+    <button onclick="adicionarTask()">Adicionar</button>
+    <ul id="lista-tasks"></ul>
+  </section>
+
+  <section>
+    <h2>📝 Notas Importantes</h2>
+    <textarea id="bloco-notas" rows="5" placeholder="Anotações..." onchange="salvarNotas()"></textarea>
+  </section>
+
+  <section>
+    <h2>🌿 Regar as Plantas</h2>
+    <button onclick="marcarRegado()">Já reguei hoje</button>
+    <p id="status-plantas"></p>
+  </section>
+
+  <section>
+    <h2>😤 Reclamações</h2>
+    <label for="tipo">Tipo de Reclamação:</label>
+    <select id="tipo">
+      <option value="trabalho lixo">trabalho lixo</option>
+      <option value="amigos malucos">amigos malucos</option>
+      <option value="amor amor amor">amor amor amor</option>
+      <option value="loucura mental">loucura mental</option>
+    </select>
+    <label for="texto-reclamacao">Escreve aí:</label>
+    <textarea id="texto-reclamacao" rows="4" placeholder="Reclama aqui mesmo..."></textarea>
+    <button onclick="salvarReclamacao()">Reclamar</button>
+    <div id="lista-reclamacoes"></div>
+  </section>
+
+  <script>
+    function salvarMenstruacao() {
+      const data = document.getElementById('menstruacao').value;
+      localStorage.setItem('menstruacao', data);
+      document.getElementById('info-menstruacao').textContent = `Último registro: ${data}`;
+    }
+
+    function adicionarTask() {
+      const task = document.getElementById('nova-task').value;
+      if (!task) return;
+      const ul = document.getElementById('lista-tasks');
+      const li = document.createElement('li');
+      li.textContent = task;
+      ul.appendChild(li);
+      document.getElementById('nova-task').value = '';
+    }
+
+    function salvarNotas() {
+      const notas = document.getElementById('bloco-notas').value;
+      localStorage.setItem('notas', notas);
+    }
+
+    function marcarRegado() {
+      const hoje = new Date().toLocaleDateString();
+      localStorage.setItem('plantas', hoje);
+      document.getElementById('status-plantas').textContent = `Regado em: ${hoje}`;
+    }
+
+    function salvarReclamacao() {
+      const tipo = document.getElementById('tipo').value;
+      const texto = document.getElementById('texto-reclamacao').value;
+      if (!texto) return;
+
+      const reclamacoes = JSON.parse(localStorage.getItem('reclamacoes') || '[]');
+      reclamacoes.push({ tipo, texto });
+      localStorage.setItem('reclamacoes', JSON.stringify(reclamacoes));
+
+      document.getElementById('texto-reclamacao').value = '';
+      mostrarReclamacoes();
+    }
+
+    function mostrarReclamacoes() {
+      const lista = document.getElementById('lista-reclamacoes');
+      lista.innerHTML = '';
+      const reclamacoes = JSON.parse(localStorage.getItem('reclamacoes') || '[]');
+      reclamacoes.forEach(rec => {
+        const div = document.createElement('div');
+        div.className = 'reclamacao-item';
+        div.innerHTML = `<strong>${rec.tipo}</strong><br>${rec.texto}`;
+        lista.appendChild(div);
+      });
+    }
+
+    window.onload = () => {
+      const dataMenstruacao = localStorage.getItem('menstruacao');
+      if (dataMenstruacao) {
+        document.getElementById('info-menstruacao').textContent = `Último registro: ${dataMenstruacao}`;
+      }
+      const notas = localStorage.getItem('notas');
+      if (notas) {
+        document.getElementById('bloco-notas').value = notas;
+      }
+      const plantas = localStorage.getItem('plantas');
+      if (plantas) {
+        document.getElementById('status-plantas').textContent = `Regado em: ${plantas}`;
+      }
+      mostrarReclamacoes();
+    }
+  </script>
+</body>
+</html>
