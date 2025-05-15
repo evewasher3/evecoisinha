@@ -1,231 +1,193 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState("Tarefas");
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState("");
-
+  const [plantsWatered, setPlantsWatered] = useState(false);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [periodNotes, setPeriodNotes] = useState("");
   const [mood, setMood] = useState("");
-
+  const [periodNotes, setPeriodNotes] = useState("");
   const [complaints, setComplaints] = useState([]);
   const [newComplaint, setNewComplaint] = useState("");
-  const [complaintType, setComplaintType] = useState("trabalho lixo");
-  const [complaintMood, setComplaintMood] = useState("😐");
+  const [complaintCategory, setComplaintCategory] = useState("");
 
-  const [plantNote, setPlantNote] = useState("");
-  const [plantWatered, setPlantWatered] = useState(false);
+  useEffect(() => {
+    const savedTasks = JSON.parse(localStorage.getItem("tasks"));
+    if (savedTasks) setTasks(savedTasks);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
 
   const handleAddTask = () => {
-    if (newTask.trim() !== "") {
-      setTasks([...tasks, { text: newTask, status: "pending", date: new Date().toLocaleDateString() }]);
+    if (newTask.trim()) {
+      setTasks([...tasks, newTask]);
       setNewTask("");
     }
   };
 
-  const handleStatusChange = (index, status) => {
-    const updatedTasks = tasks.map((task, i) =>
-      i === index ? { ...task, status } : task
-    );
-    setTasks(updatedTasks);
+  const handleDeleteTask = (index) => {
+    const newTasks = [...tasks];
+    newTasks.splice(index, 1);
+    setTasks(newTasks);
   };
 
   const handleAddComplaint = () => {
-    if (newComplaint.trim() !== "") {
-      const date = new Date().toLocaleDateString();
-      setComplaints([...complaints, { text: newComplaint, type: complaintType, mood: complaintMood, date }]);
+    if (newComplaint.trim() && complaintCategory) {
+      setComplaints([...complaints, { text: newComplaint, category: complaintCategory }]);
       setNewComplaint("");
+      setComplaintCategory("");
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-pink-100 to-purple-100 text-gray-800 font-sans">
-      <header className="text-center py-10">
-        <h1 className="text-5xl font-light text-purple-700 tracking-wide">Eve Coisas</h1>
-        <nav className="mt-8 flex justify-center gap-4 flex-wrap">
-          {['Tarefas', 'Sangue', 'Reclamações', 'Plantas'].map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`border border-purple-200 bg-white/40 backdrop-blur-md text-purple-700 px-5 py-2 rounded-full hover:bg-purple-100 transition text-sm shadow-md ${
-                activeTab === tab ? "bg-purple-100" : ""
-              }`}
-            >
-              {tab}
-            </button>
-          ))}
-        </nav>
-      </header>
+    <main className="p-6 max-w-3xl mx-auto">
+      <h1 className="text-4xl font-bold text-pink-600 mb-6 text-center">Eve Coisas</h1>
 
-      <main className="max-w-4xl mx-auto px-6 py-10 space-y-10">
-        {activeTab === "Tarefas" && (
-          <section>
-            <h2 className="text-3xl font-semibold text-pink-500 mb-6">Tarefas do Dia</h2>
-            <div className="flex items-center gap-4 mb-6">
-              <input
-                type="text"
-                value={newTask}
-                onChange={(e) => setNewTask(e.target.value)}
-                placeholder="Digite uma nova tarefa..."
-                className="flex-grow p-3 border border-purple-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
-              />
-              <button
-                onClick={handleAddTask}
-                className="bg-pink-400 hover:bg-pink-500 text-white px-5 py-2 rounded-md shadow"
+      <div className="flex justify-center mb-6 space-x-4">
+        {['Tarefas', 'Sangue', 'Plantas', 'Reclamações'].map(tab => (
+          <Button
+            key={tab}
+            variant={activeTab === tab ? "default" : "outline"}
+            onClick={() => setActiveTab(tab)}
+          >
+            {tab}
+          </Button>
+        ))}
+      </div>
+
+      {activeTab === "Tarefas" && (
+        <section>
+          <h2 className="text-3xl font-semibold text-purple-500 mb-6">Tarefas do Dia</h2>
+          <div className="flex gap-2 mb-4">
+            <input
+              type="text"
+              value={newTask}
+              onChange={(e) => setNewTask(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleAddTask()}
+              placeholder="Digite uma nova tarefa..."
+              className="flex-grow p-3 border border-purple-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
+            />
+            <Button onClick={handleAddTask}>Adicionar</Button>
+          </div>
+          <ul className="space-y-2">
+            {tasks.map((task, index) => (
+              <li
+                key={index}
+                className="flex justify-between items-center bg-purple-50 p-3 rounded-md"
               >
-                Adicionar
-              </button>
-            </div>
-            <ul className="space-y-4">
-              {tasks.map((task, index) => (
-                <li
-                  key={index}
-                  className="flex justify-between items-center p-4 bg-white rounded-lg shadow border border-purple-200"
-                >
-                  <div className="flex flex-col flex-grow">
-                    <span className="text-sm text-gray-500 mb-1">{task.date}</span>
-                    <span
-                      className={`text-lg ${task.status === 'done' ? 'line-through text-green-500' : task.status === 'postponed' ? 'text-yellow-500' : 'text-gray-800'}`}
-                    >
-                      {task.text}
-                    </span>
-                  </div>
-                  <div className="flex gap-2 ml-4">
-                    <button
-                      onClick={() => handleStatusChange(index, 'done')}
-                      className="text-green-600 border border-green-300 px-3 py-1 rounded hover:bg-green-100 text-sm"
-                    >
-                      ✔ Feita
-                    </button>
-                    <button
-                      onClick={() => handleStatusChange(index, 'postponed')}
-                      className="text-yellow-600 border border-yellow-300 px-3 py-1 rounded hover:bg-yellow-100 text-sm"
-                    >
-                      ⚪ Adiada
-                    </button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
+                <span>{task}</span>
+                <Button variant="ghost" onClick={() => handleDeleteTask(index)}>
+                  ❌
+                </Button>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
-        {activeTab === "Sangue" && (
-          <section>
-            <h2 className="text-3xl font-semibold text-pink-500 mb-6">Ciclo Menstrual</h2>
-            <div className="space-y-4">
+      {activeTab === "Sangue" && (
+        <section>
+          <h2 className="text-3xl font-semibold text-pink-500 mb-6">Ciclo Menstrual</h2>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Data de início:</label>
               <input
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
                 className="w-full p-3 border border-purple-300 rounded-md"
-                placeholder="Data de início"
               />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Como você está hoje?</label>
               <select
                 value={mood}
                 onChange={(e) => setMood(e.target.value)}
                 className="w-full p-3 border border-purple-300 rounded-md"
               >
-                <option value="">Como você está hoje?</option>
+                <option value="">Selecione</option>
                 <option value="😴">Cansada</option>
                 <option value="😭">Chorosa</option>
                 <option value="😡">Irritada</option>
                 <option value="🙂">Ok</option>
               </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Notas:</label>
               <textarea
                 value={periodNotes}
                 onChange={(e) => setPeriodNotes(e.target.value)}
                 placeholder="Notas sobre esse ciclo..."
                 className="w-full p-3 border border-purple-300 rounded-md"
               />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Data de término:</label>
               <input
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
                 className="w-full p-3 border border-purple-300 rounded-md"
-                placeholder="Data de término"
               />
             </div>
-          </section>
-        )}
+          </div>
+        </section>
+      )}
 
-        {activeTab === "Reclamações" && (
-          <section>
-            <h2 className="text-3xl font-semibold text-pink-500 mb-6">Reclamações</h2>
-            <div className="space-y-4">
-              <select
-                value={complaintType}
-                onChange={(e) => setComplaintType(e.target.value)}
-                className="w-full p-3 border border-purple-300 rounded-md"
-              >
-                <option value="trabalho lixo">Trabalho Lixo</option>
-                <option value="amigos malucos">Amigos Malucos</option>
-                <option value="amor amor amor">Amor Amor Amor</option>
-                <option value="loucura mental">Loucura Mental</option>
-              </select>
-              <select
-                value={complaintMood}
-                onChange={(e) => setComplaintMood(e.target.value)}
-                className="w-full p-3 border border-purple-300 rounded-md"
-              >
-                <option value="😐">😐</option>
-                <option value="😤">😤</option>
-                <option value="😭">😭</option>
-                <option value="😵‍💫">😵‍💫</option>
-              </select>
-              <textarea
-                value={newComplaint}
-                onChange={(e) => setNewComplaint(e.target.value)}
-                placeholder="Digite sua reclamação..."
-                className="w-full p-3 border border-purple-300 rounded-md"
-              />
-              <button
-                onClick={handleAddComplaint}
-                className="bg-pink-400 hover:bg-pink-500 text-white px-5 py-2 rounded-md shadow"
-              >
-                Reclamar
-              </button>
-              <ul className="space-y-3 mt-6">
-                {complaints.map((c, index) => (
-                  <li key={index} className="bg-white border border-purple-200 rounded-lg p-4 shadow">
-                    <div className="flex justify-between">
-                      <span className="text-sm text-gray-500">{c.date}</span>
-                      <span>{c.mood}</span>
-                    </div>
-                    <p className="mt-1 text-purple-800">{c.type}</p>
-                    <p className="text-gray-700">{c.text}</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </section>
-        )}
+      {activeTab === "Plantas" && (
+        <section>
+          <h2 className="text-3xl font-semibold text-green-500 mb-6">Plantas</h2>
+          <div className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              checked={plantsWatered}
+              onChange={() => setPlantsWatered(!plantsWatered)}
+              className="form-checkbox h-5 w-5 text-green-500"
+            />
+            <label className="text-lg">Reguei minhas plantinhas hoje 🌱</label>
+          </div>
+        </section>
+      )}
 
-        {activeTab === "Plantas" && (
-          <section>
-            <h2 className="text-3xl font-semibold text-pink-500 mb-6">Rega de Plantas</h2>
-            <div className="space-y-4">
-              <label className="flex items-center gap-3">
-                <input
-                  type="checkbox"
-                  checked={plantWatered}
-                  onChange={(e) => setPlantWatered(e.target.checked)}
-                  className="w-5 h-5 text-pink-400"
-                />
-                Marcar rega da semana
-              </label>
-              <textarea
-                value={plantNote}
-                onChange={(e) => setPlantNote(e.target.value)}
-                placeholder="Observações sobre as plantas..."
-                className="w-full p-3 border border-purple-300 rounded-md"
-              />
-            </div>
-          </section>
-        )}
-      </main>
-    </div>
+      {activeTab === "Reclamações" && (
+        <section>
+          <h2 className="text-3xl font-semibold text-red-500 mb-6">Reclamações</h2>
+          <div className="space-y-4">
+            <select
+              value={complaintCategory}
+              onChange={(e) => setComplaintCategory(e.target.value)}
+              className="w-full p-3 border border-purple-300 rounded-md"
+            >
+              <option value="">Escolha a categoria</option>
+              <option value="trabalho lixo">Trabalho lixo</option>
+              <option value="amigos malucos">Amigos malucos</option>
+              <option value="amor amor amor">Amor amor amor</option>
+              <option value="loucura mental">Loucura mental</option>
+            </select>
+            <textarea
+              value={newComplaint}
+              onChange={(e) => setNewComplaint(e.target.value)}
+              placeholder="Reclame aqui..."
+              className="w-full p-3 border border-purple-300 rounded-md"
+            />
+            <Button onClick={handleAddComplaint}>Registrar Reclamação</Button>
+            <ul className="space-y-2 mt-4">
+              {complaints.map((c, index) => (
+                <li key={index} className="p-3 bg-red-100 rounded-md">
+                  <strong className="block">Categoria: {c.category}</strong>
+                  <span>{c.text}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
+    </main>
   );
 }
