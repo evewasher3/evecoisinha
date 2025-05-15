@@ -1,193 +1,59 @@
-import React, { useState, useEffect } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-
-export default function Home() {
-  const [activeTab, setActiveTab] = useState("Tarefas");
-  const [tasks, setTasks] = useState([]);
-  const [newTask, setNewTask] = useState("");
-  const [plantsWatered, setPlantsWatered] = useState(false);
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [mood, setMood] = useState("");
-  const [periodNotes, setPeriodNotes] = useState("");
-  const [complaints, setComplaints] = useState([]);
-  const [newComplaint, setNewComplaint] = useState("");
-  const [complaintCategory, setComplaintCategory] = useState("");
-
-  useEffect(() => {
-    const savedTasks = JSON.parse(localStorage.getItem("tasks"));
-    if (savedTasks) setTasks(savedTasks);
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-  }, [tasks]);
-
-  const handleAddTask = () => {
-    if (newTask.trim()) {
-      setTasks([...tasks, newTask]);
-      setNewTask("");
-    }
-  };
-
-  const handleDeleteTask = (index) => {
-    const newTasks = [...tasks];
-    newTasks.splice(index, 1);
-    setTasks(newTasks);
-  };
-
-  const handleAddComplaint = () => {
-    if (newComplaint.trim() && complaintCategory) {
-      setComplaints([...complaints, { text: newComplaint, category: complaintCategory }]);
-      setNewComplaint("");
-      setComplaintCategory("");
-    }
-  };
-
-  return (
-    <main className="p-6 max-w-3xl mx-auto">
-      <h1 className="text-4xl font-bold text-pink-600 mb-6 text-center">Eve Coisas</h1>
-
-      <div className="flex justify-center mb-6 space-x-4">
-        {['Tarefas', 'Sangue', 'Plantas', 'Reclamações'].map(tab => (
-          <Button
-            key={tab}
-            variant={activeTab === tab ? "default" : "outline"}
-            onClick={() => setActiveTab(tab)}
-          >
-            {tab}
-          </Button>
-        ))}
-      </div>
-
-      {activeTab === "Tarefas" && (
-        <section>
-          <h2 className="text-3xl font-semibold text-purple-500 mb-6">Tarefas do Dia</h2>
-          <div className="flex gap-2 mb-4">
-            <input
-              type="text"
-              value={newTask}
-              onChange={(e) => setNewTask(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleAddTask()}
-              placeholder="Digite uma nova tarefa..."
-              className="flex-grow p-3 border border-purple-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
-            />
-            <Button onClick={handleAddTask}>Adicionar</Button>
-          </div>
-          <ul className="space-y-2">
-            {tasks.map((task, index) => (
-              <li
-                key={index}
-                className="flex justify-between items-center bg-purple-50 p-3 rounded-md"
-              >
-                <span>{task}</span>
-                <Button variant="ghost" onClick={() => handleDeleteTask(index)}>
-                  ❌
-                </Button>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-
-      {activeTab === "Sangue" && (
-        <section>
-          <h2 className="text-3xl font-semibold text-pink-500 mb-6">Ciclo Menstrual</h2>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Data de início:</label>
-              <input
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="w-full p-3 border border-purple-300 rounded-md"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Como você está hoje?</label>
-              <select
-                value={mood}
-                onChange={(e) => setMood(e.target.value)}
-                className="w-full p-3 border border-purple-300 rounded-md"
-              >
-                <option value="">Selecione</option>
-                <option value="😴">Cansada</option>
-                <option value="😭">Chorosa</option>
-                <option value="😡">Irritada</option>
-                <option value="🙂">Ok</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Notas:</label>
-              <textarea
-                value={periodNotes}
-                onChange={(e) => setPeriodNotes(e.target.value)}
-                placeholder="Notas sobre esse ciclo..."
-                className="w-full p-3 border border-purple-300 rounded-md"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Data de término:</label>
-              <input
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="w-full p-3 border border-purple-300 rounded-md"
-              />
-            </div>
-          </div>
-        </section>
-      )}
-
-      {activeTab === "Plantas" && (
-        <section>
-          <h2 className="text-3xl font-semibold text-green-500 mb-6">Plantas</h2>
-          <div className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              checked={plantsWatered}
-              onChange={() => setPlantsWatered(!plantsWatered)}
-              className="form-checkbox h-5 w-5 text-green-500"
-            />
-            <label className="text-lg">Reguei minhas plantinhas hoje 🌱</label>
-          </div>
-        </section>
-      )}
-
-      {activeTab === "Reclamações" && (
-        <section>
-          <h2 className="text-3xl font-semibold text-red-500 mb-6">Reclamações</h2>
-          <div className="space-y-4">
-            <select
-              value={complaintCategory}
-              onChange={(e) => setComplaintCategory(e.target.value)}
-              className="w-full p-3 border border-purple-300 rounded-md"
-            >
-              <option value="">Escolha a categoria</option>
-              <option value="trabalho lixo">Trabalho lixo</option>
-              <option value="amigos malucos">Amigos malucos</option>
-              <option value="amor amor amor">Amor amor amor</option>
-              <option value="loucura mental">Loucura mental</option>
-            </select>
-            <textarea
-              value={newComplaint}
-              onChange={(e) => setNewComplaint(e.target.value)}
-              placeholder="Reclame aqui..."
-              className="w-full p-3 border border-purple-300 rounded-md"
-            />
-            <Button onClick={handleAddComplaint}>Registrar Reclamação</Button>
-            <ul className="space-y-2 mt-4">
-              {complaints.map((c, index) => (
-                <li key={index} className="p-3 bg-red-100 rounded-md">
-                  <strong className="block">Categoria: {c.category}</strong>
-                  <span>{c.text}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
-      )}
-    </main>
-  );
+// package.json
+{
+  "name": "evecoisinha",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": "https://evewasher3.github.io/evecoisinha",
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.14.1",
+    "react-scripts": "5.0.1",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
+  },
+  "devDependencies": {
+    "gh-pages": "^5.0.0"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
 }
+
+// src/index.js
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+import './index.css';
+import { HashRouter } from 'react-router-dom';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <HashRouter>
+      <App />
+    </HashRouter>
+  </React.StrictMode>
+);
