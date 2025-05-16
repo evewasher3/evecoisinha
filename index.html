@@ -1,59 +1,34 @@
-// package.json
-{
-  "name": "evecoisinha",
-  "version": "0.1.0",
-  "private": true,
-  "homepage": "https://evewasher3.github.io/evecoisinha",
-  "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.14.1",
-    "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
-  },
-  "devDependencies": {
-    "gh-pages": "^5.0.0"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  }
-}
+<!DOCTYPE html>
+<html lang="pt-br">
 
-// src/index.js
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
-import './index.css';
-import { HashRouter } from 'react-router-dom';
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content='width-device-width, initial-scale=1.0'>
+    <title Navbar></title>
+    <link rel="stylesheet" href="style.css">
+    <head>
+    
+        <body>
+            <header>
+                <nav>
+                    <a class="logo" href="/">Eve Coisas</a>
+                    <div class="mobile-menu">
+                        <div class="line1"></div>
+                        <div class="line2"></div>
+                        <div class="line3"></div>
+                    </div>
+                    <ul class="nav-list">
+                        <li><a href="/">Sangue</a><li>
+                        <li><a href="/">Tasks</a></li>
+                        <li><a href="/">Plantas</a></li>
+                        <li><a href="/">Reclamações</a></li>
+                        <li><a href="/">Registro</a></li>
+                    </ul>    
+                </nav>
+            </header>     
+            <main></main>
+            <script src="mobile-navbar.js"></script>
+        </body>
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <HashRouter>
-      <App />
-    </HashRouter>
-  </React.StrictMode>
-);
+        <html>
